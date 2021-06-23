@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run -d --name mysql-server -e MYSQL_ROOT_PASSWORD=mysql -p 9306:3306 mysql:8
