@@ -30,7 +30,12 @@ jobs:
       - name: Package & Verify
         run: mvn verify
       - name: Build the Docker image
-        run: docker build -t se-project:1.0 .
+        if: startsWith(github.ref, 'refs/tags/')
+        run: docker build -t ghcr.io/xii1/se-project:${{ steps.meta.outputs.tags }} .
       - name: Login github registry
+        if: startsWith(github.ref, 'refs/tags/')
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login https://ghcr.io -u ${{ github.repository_owner }} --password-stdin
+      - name: Push the Docker image
+        if: startsWith(github.ref, 'refs/tags/')
+        run: docker push ghcr.io/xii1/se-project:${{ steps.meta.outputs.tags }}
 
