@@ -2,7 +2,8 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master, feature/** ]
+    branches: [ '**' ]
+    tags: [ '*' ]
   pull_request:
     branches: [ master ]
 
@@ -18,7 +19,18 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Compile
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build
         run: mvn compile
-      - name: Build & Verify
+      - name: Package & Verify
         run: mvn verify
+      - name: Build the Docker image
+        run: docker build -t se-project:1.0 .
+      - name: Login github registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login https://ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
