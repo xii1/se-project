@@ -157,7 +157,7 @@ public class UserController {
             return new ResponseEntity<>("Email is not exists", HttpStatus.NOT_FOUND);
         } else {
             final User u = userService.getUserByEmail(user.getEmail());
-            if (u.getPassword().equalsIgnoreCase(user.getPassword())) {
+            if (u.getPassword().equalsIgnoreCase(PasswordUtil.encode(user.getPassword()))) {
                 return new ResponseEntity<>("Done", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Password is invalid", HttpStatus.OK);
