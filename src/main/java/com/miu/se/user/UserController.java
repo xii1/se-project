@@ -150,6 +150,21 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> login(@Valid @RequestBody PostUserDTO user) throws NoSuchAlgorithmException {
+        final boolean isExists = userService.checkExists(user.getEmail());
+        if (!isExists) {
+            return new ResponseEntity<>("Email is not exists", HttpStatus.NOT_FOUND);
+        } else {
+            final User u = userService.getUserByEmail(user.getEmail());
+            if (u.getPassword().equalsIgnoreCase(user.getPassword())) {
+                return new ResponseEntity<>("Done", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Password is invalid", HttpStatus.OK);
+            }
+        }
+    }
+
     @GetMapping(path = "vipUsers")
     public List<GetTopVipUserResponse> getVipUsers(GetTopVipUserRequest request) {
         if (request == null || !request.isValid()) {
