@@ -1,6 +1,5 @@
 package com.miu.se.user;
 
-import com.miu.se.common.dto.ChangePasswordDTO;
 import com.miu.se.common.dto.PostUserDTO;
 import com.miu.se.common.entity.Order;
 import com.miu.se.common.entity.Product;
@@ -22,7 +21,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -100,32 +98,32 @@ public class UserController {
         userService.addRoles(userId, role);
     }
 
-    @PatchMapping("/changePWD")
-    public void changePWD(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) throws Exception {
-        User user = userService.getUserById(0L);
-        if(PasswordUtil.encode(changePasswordDTO.getOldPassword()).toUpperCase().equals(user.getPassword().toUpperCase())) {
-            user.setPassword(PasswordUtil.encode(changePasswordDTO.getNewPassword()));
-            userService.save(user);
-        } else {
-            throw new Exception("old password not match");
-        }
-    }
+//    @PatchMapping("/changePWD")
+//    public void changePWD(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) throws Exception {
+//        User user = userService.getUserById(0L);
+//        if(PasswordUtil.encode(changePasswordDTO.getOldPassword()).equalsIgnoreCase(user.getPassword())) {
+//            user.setPassword(PasswordUtil.encode(changePasswordDTO.getNewPassword()));
+//            userService.save(user);
+//        } else {
+//            throw new Exception("old password not match");
+//        }
+//    }
 
-    @PatchMapping("/editProfile/{userId}")
-    public void editProfile(@PathVariable Long userId, @RequestBody User u) throws NoSuchAlgorithmException {
-        User user = userService.getUserById(userId);
-        user.setNickname(u.getNickname());
-        user.setBio(u.getBio());
-        user.setGender(u.getGender());
-        user.setDob(u.getDob());
-        user.setPhoneNumber(u.getPhoneNumber());
-        userService.save(user);
-    }
+//    @PatchMapping("/editProfile/{userId}")
+//    public void editProfile(@PathVariable Long userId, @RequestBody User u) throws NoSuchAlgorithmException {
+//        User user = userService.getUserById(userId);
+//        user.setNickname(u.getNickname());
+//        user.setBio(u.getBio());
+//        user.setGender(u.getGender());
+//        user.setDob(u.getDob());
+//        user.setPhoneNumber(u.getPhoneNumber());
+//        userService.save(user);
+//    }
 
-    @PatchMapping("/{userId}/editShippingAddr/{shippingAddrId}")
-    public void editShippingAddr(@PathVariable Long userId, @PathVariable Long shippingAddrId, @RequestBody ShippingAddress shippingAddress) {
-        userService.editShippingAddr(userId, shippingAddrId, shippingAddress);
-    }
+//    @PatchMapping("/{userId}/editShippingAddr/{shippingAddrId}")
+//    public void editShippingAddr(@PathVariable Long userId, @PathVariable Long shippingAddrId, @RequestBody ShippingAddress shippingAddress) {
+//        userService.editShippingAddr(userId, shippingAddrId, shippingAddress);
+//    }
 
     @GetMapping(value = "/getShippingAddrById/{shippingAddrId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ShippingAddress getShippingAddrById(@PathVariable("shippingAddrId") Long id) {

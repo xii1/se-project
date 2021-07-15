@@ -23,3 +23,7 @@ insert into category_products (products_id, categories_id) values (1, 1);
 insert into category_products (products_id, categories_id) values (2, 1);
 insert into category_products (products_id, categories_id) values (3, 2);
 insert into category_products (products_id, categories_id) values (4, 3);
+
+insert into orders (id, counted_point, created_at, note, status, updated_at, special_user_id) values (1, true, null, 'test1', 'PROCESSING', null, 1);
+insert into orders (id, counted_point, created_at, note, status, updated_at, special_user_id) values (2, false, null, 'test2', 'CANCELLED', null, 1);
+insert into orders (id, counted_point, created_at, note, status, updated_at, special_user_id) values (3, true, null, 'test3', 'CONFIRMED', null,1);
