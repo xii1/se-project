@@ -51,15 +51,15 @@ public class CategoryController {
         return categories.stream().map(Category::toGetCategoryDTO).collect(Collectors.toList());
     }
 
-    @DeleteMapping
-    public void delete(@PathVariable Long id) {
-        categoryService.deleteById(id);
-    }
+//    @DeleteMapping
+//    public void delete(@PathVariable Long id) {
+//        categoryService.deleteById(id);
+//    }
 
-    @PostMapping(path = "/{categoryId}/products", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public GetProductDTO addProduct(@PathVariable Long categoryId, @RequestBody PostProductDTO product) {
-        return categoryService.addProduct(categoryId, product.toProduct()).toGetProductDTO();
-    }
+//    @PostMapping(path = "/{categoryId}/products", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public GetProductDTO addProduct(@PathVariable Long categoryId, @RequestBody PostProductDTO product) {
+//        return categoryService.addProduct(categoryId, product.toProduct()).toGetProductDTO();
+//    }
 
     @GetMapping(path = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GetProductDTO> getProducts(@PathVariable Long categoryId) {
@@ -73,66 +73,66 @@ public class CategoryController {
      * @param request input parameter
      * @return list of category
      */
-    @GetMapping(path = "topSoldCategories")
-    public List<GetTopSoldCategoryResponse> getTopSoldCategories(GetTopSoldCategoriesRequest request) {
-        // Validate data.
-        if (request == null || !request.isValid()) {
-            throw new NoSuchElementException();
-        }
-        Integer limit = request.getLimit();
-        Integer year = request.getYear();
-        if (limit < 1 || year < 1) {
-            throw new InvalidParameterException();
-        }
-
-        // Prepare data source.
-        List<Category> categories = categoryService.getAll();
-        List<Order> orders = orderService.getAll();
-
-        // Filter order in a year.
-        BiPredicate<Order, Integer> filterOrderInThisYear = (o, iYear) -> {
-            if (o.getCreatedAt() == null) {
-                return false;
-            }
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(o.getCreatedAt());
-            return calendar.get(Calendar.YEAR) == iYear;
-        };
-
-        // Filter order items in a category
-        BiPredicate<OrderItem, Category> filterOrderItemsById = (oi, iCategory) -> {
-            if (oi.getProduct() == null ||
-                    oi.getProduct().getCategories() == null) {
-                return false;
-            }
-            return oi
-                    .getProduct()
-                    .getCategoryId() == iCategory.getId();
-        };
-
-        // Count the number of order in this category
-        TriFunction<List<Order>, Category, Integer, Long> getNumberOfCategoryOrderInAYear = (iOrders, iCategory, iYear) ->
-                (long) iOrders
-                        .stream()
-                        .filter(o -> filterOrderInThisYear.test(o, iYear))
-                        .flatMap(o -> o.getItems().stream())
-                        .filter(i -> filterOrderItemsById.test(i, iCategory))
-                        .collect(Collectors.groupingBy(oi -> oi.getOrder()))
-                        .entrySet()
-                        .size();
-
-        return categories
-                .stream()
-                .map(c -> {
-                    Long numOfOrder = getNumberOfCategoryOrderInAYear.apply(orders, c, year);
-                    Pair<Category, Long> pair = Pair.of(c, numOfOrder);
-                    System.out.println("Pair: " + numOfOrder + ". Category: " + c.getName());
-                    return pair;
-                })
-                .filter(p -> p.getSecond() > 0)
-                .sorted((p1, p2) -> (int) (p2.getSecond() - p1.getSecond()))
-                .limit(limit)
-                .map(r -> new GetTopSoldCategoryResponse(r.getFirst().getName(), r.getSecond()))
-                .collect(Collectors.toList());
-    }
+//    @GetMapping(path = "topSoldCategories")
+//    public List<GetTopSoldCategoryResponse> getTopSoldCategories(GetTopSoldCategoriesRequest request) {
+//        // Validate data.
+//        if (request == null || !request.isValid()) {
+//            throw new NoSuchElementException();
+//        }
+//        Integer limit = request.getLimit();
+//        Integer year = request.getYear();
+//        if (limit < 1 || year < 1) {
+//            throw new InvalidParameterException();
+//        }
+//
+//        // Prepare data source.
+//        List<Category> categories = categoryService.getAll();
+//        List<Order> orders = orderService.getAll();
+//
+//        // Filter order in a year.
+//        BiPredicate<Order, Integer> filterOrderInThisYear = (o, iYear) -> {
+//            if (o.getCreatedAt() == null) {
+//                return false;
+//            }
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(o.getCreatedAt());
+//            return calendar.get(Calendar.YEAR) == iYear;
+//        };
+//
+//        // Filter order items in a category
+//        BiPredicate<OrderItem, Category> filterOrderItemsById = (oi, iCategory) -> {
+//            if (oi.getProduct() == null ||
+//                    oi.getProduct().getCategories() == null) {
+//                return false;
+//            }
+//            return oi
+//                    .getProduct()
+//                    .getCategoryId() == iCategory.getId();
+//        };
+//
+//        // Count the number of order in this category
+//        TriFunction<List<Order>, Category, Integer, Long> getNumberOfCategoryOrderInAYear = (iOrders, iCategory, iYear) ->
+//                (long) iOrders
+//                        .stream()
+//                        .filter(o -> filterOrderInThisYear.test(o, iYear))
+//                        .flatMap(o -> o.getItems().stream())
+//                        .filter(i -> filterOrderItemsById.test(i, iCategory))
+//                        .collect(Collectors.groupingBy(oi -> oi.getOrder()))
+//                        .entrySet()
+//                        .size();
+//
+//        return categories
+//                .stream()
+//                .map(c -> {
+//                    Long numOfOrder = getNumberOfCategoryOrderInAYear.apply(orders, c, year);
+//                    Pair<Category, Long> pair = Pair.of(c, numOfOrder);
+//                    System.out.println("Pair: " + numOfOrder + ". Category: " + c.getName());
+//                    return pair;
+//                })
+//                .filter(p -> p.getSecond() > 0)
+//                .sorted((p1, p2) -> (int) (p2.getSecond() - p1.getSecond()))
+//                .limit(limit)
+//                .map(r -> new GetTopSoldCategoryResponse(r.getFirst().getName(), r.getSecond()))
+//                .collect(Collectors.toList());
+//    }
 }

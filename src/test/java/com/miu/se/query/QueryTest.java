@@ -18,7 +18,7 @@ public class QueryTest extends AbstractControllerTest {
                 .queryParam("limit", "1"))
                 .andReturn();
         String resultString = result.getResponse().getContentAsString();
-        Assertions.assertEquals("", resultString);
+        Assertions.assertEquals("[]", resultString);
     }
 
     @Test

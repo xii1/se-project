@@ -54,24 +54,22 @@ public class ProductController {
         return products.stream().map(Product::toGetProductDTO).collect(Collectors.toList());
     }
 
-    @Operation(security = @SecurityRequirement(name = "auth"))
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        productService.deleteById(id);
-    }
+//    @Operation(security = @SecurityRequirement(name = "auth"))
+//    @DeleteMapping("/{id}")
+//    public void delete(@PathVariable Long id) {
+//        productService.deleteById(id);
+//    }
 
-    @Operation(security = @SecurityRequirement(name = "auth"))
-    @PostMapping("/{id}/reviews")
-    public Review addReview(@PathVariable Long id, @RequestBody PostReviewDTO review) {
-        return productService.addReview(id, review.toReview());
-    }
+//    @PostMapping(value = "/{id}/reviews", consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+//    public Review addReview(@PathVariable Long id, @RequestBody PostReviewDTO review) {
+//        return productService.addReview(id, review.toReview());
+//    }
 
     /**
      * Get n products user rating the most in a year.
      * @param request
      * @return
      */
-    @Operation(security = @SecurityRequirement(name = "auth"))
     @GetMapping("topRatingProducts")
     public List<GetTopRatingProductResponse> getTopRatingProducts(GetTopRatingProductsRequest request) {
         if (request == null || !request.isValid()) {
